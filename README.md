@@ -39,7 +39,7 @@ let sakura = SakuraAI::default();
 
 ### Chat Completion API
 
-`send_chat_messages`を用いてSakura AI Engineの[Chat Completion](https://manual.sakura.ad.jp/api/cloud/ai-engine/inference.html#operation/createChatCompletion)を呼び出します。
+`send_chat_messages`を用いてSakura AI Engineの[Chat Completion](https://manual.sakura.ad.jp/api/cloud/ai-engine/inference.html#operation/createChatCompletion)を呼び出す。
 
 ```rust
 use ollama_rs::generation::chat::{ChatMessage, ChatMessageRequest};
@@ -65,7 +65,7 @@ if let Ok(res) = res {
 }
 ```
 
-`send_chat_messages_stream`の使用例は[examples/chat_api_chatbot.rs]()を参考に。
+`send_chat_messages_stream`の使用例は[examples/chat_api_chatbot.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_api_chatbot.rs)を参考に。
 
 ```bash
 > cargo run --example chat_api_chatbot        
@@ -79,7 +79,7 @@ if let Ok(res) = res {
 
 ### Chat Completion API with History
 
-`send_chat_messages_with_history`を用いると会話履歴も管理されます。
+`send_chat_messages_with_history`を用いると会話履歴も管理される。
 
 ```rust
 use ollama_rs::generation::chat::{ChatMessage, ChatMessageRequest};
@@ -91,7 +91,7 @@ let prompt = "Why is the sky blue?".to_string();
 // but you could also implement it yourself on a custom type
 let mut history = vec![];
 
-let res = ollama
+let res = sakura
     .send_chat_messages_with_history(
         &mut history, // <- messages will be saved here
         ChatMessageRequest::new(
@@ -106,13 +106,15 @@ if let Ok(res) = res {
 }
 ```
 
+[examples/chat_with_history.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_with_history.rs)と[examples/chat_with_history_stream.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_with_history_stream.rs)を参考に。
+
 ## Ollama-rsからの移行
 
-上の例を[ollama-rs](https://github.com/pepperoni21/ollama-rs)と比較すると分かる通り、`ollama_rs::Ollama`の代わりに`sakura_ai_rs::SakuraAI`を使用するだけです。
+上の例を[ollama-rs](https://github.com/pepperoni21/ollama-rs)と比較すると分かる通り、`ollama_rs::Ollama`の代わりに`sakura_ai_rs::SakuraAI`を使用すればよい。
 
-入出力のオブジェクトには同じものを使用しています。
+入出力のオブジェクトには同じものを使用しているため、それ以外のコードは同じ。
 
-`send_chat_messages`, `send_chat_messages_stream`, `send_chat_messages_with_history`, `send_chat_messages_with_history_stream` がサポートされています。
+現在、`send_chat_messages`, `send_chat_messages_stream`, `send_chat_messages_with_history`, `send_chat_messages_with_history_stream` がサポートされている。
 
 ## 公式ドキュメント
 
