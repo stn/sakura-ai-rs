@@ -10,7 +10,7 @@
 //!
 //! ollama-rsとsakura-ai-rsをCargo.tomlのdependenciesに追加
 //!
-//!```bash
+//!```
 //!cargo add sakura-ai-rs
 //!cargo add ollama-rs
 //!```
@@ -19,12 +19,12 @@
 //!
 //! [アカウントトークン](https://secure.sakura.ad.jp/ai/account-tokens)を作成し、環境変数`SAKURA_AI_ENGINE_API_KEY`に設定します。
 //!
-//!```bash
+//!```
 //!# macOS / Linux
 //!export SAKURA_AI_ENGINE_API_KEY='...'
 //!```
 //!
-//!```bash
+//!```
 //!# Windows PowerShell
 //!$env:SAKURA_AI_ENGINE_API_KEY = '...'
 //!```
@@ -42,7 +42,8 @@
 //! `send_chat_messages`を用いてSakura AI Engineの[Chat Completion](https://manual.sakura.ad.jp/api/cloud/ai-engine/inference.html#operation/createChatCompletion)を呼び出す。
 //!
 //!```rust
-//!use ollama_rs::generation::chat::{ChatMessage, ChatMessageRequest};
+//!# tokio_test::block_on(async {
+//!use ollama_rs::generation::chat::{ChatMessage, request::ChatMessageRequest};
 //!use ollama_rs::history::ChatHistory;
 //!use sakura_ai_rs::SakuraAI;
 //!
@@ -63,11 +64,12 @@
 //!if let Ok(res) = res {
 //!    println!("{}", res.message.content);
 //!}
+//!# });
 //!```
 //!
 //! `send_chat_messages_stream`の使用例は[examples/chat_api_chatbot.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_api_chatbot.rs)を参考に。
 //!
-//!```bash
+//!```
 //!> cargo run --example chat_api_chatbot        
 //!    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
 //!     Running `target\debug\examples\chat_api_chatbot.exe`
@@ -82,11 +84,15 @@
 //! `send_chat_messages_with_history`を用いると会話履歴も管理される。
 //!
 //!```rust
-//!use ollama_rs::generation::chat::{ChatMessage, ChatMessageRequest};
+//!# tokio_test::block_on(async {
+//!use ollama_rs::generation::chat::{ChatMessage, request::ChatMessageRequest};
 //!use ollama_rs::history::ChatHistory;
+//!use sakura_ai_rs::SakuraAI;
+//!
+//!let sakura = SakuraAI::default();
 //!
 //!let model = "llama2:latest".to_string();
-//! let prompt = "Why is the sky blue?".to_string();
+//!let prompt = "Why is the sky blue?".to_string();
 //!// `Vec<ChatMessage>` implements `ChatHistory`,
 //!// but you could also implement it yourself on a custom type
 //!let mut history = vec![];
@@ -104,6 +110,7 @@
 //!if let Ok(res) = res {
 //!    println!("{}", res.message.content);
 //!}
+//!# });
 //!```
 //!
 //! [examples/chat_with_history.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_with_history.rs)と[examples/chat_with_history_stream.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_with_history_stream.rs)を参考に。
@@ -125,6 +132,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use ollama_rs::IntoUrl;
+use secrecy::SecretString;
 use url::Url;
 
 pub mod generation;
@@ -135,6 +143,7 @@ pub struct SakuraAI {
     pub(crate) reqwest_client: reqwest::Client,
     #[cfg(feature = "headers")]
     pub(crate) request_headers: reqwest::header::HeaderMap,
+    pub(crate) api_key: SecretString,
 }
 
 /// The main struct representing an Sakura AI Engine client.
@@ -190,9 +199,14 @@ impl SakuraAI {
         Self {
             url,
             reqwest_client,
-            #[cfg(feature = "headers")]
-            request_headers: reqwest::header::HeaderMap::new(),
+            ..Default::default()
         }
+    }
+
+    /// To use a different API key different from default SAKURA_AI_ENGINE_API_KEY env var
+    pub fn with_api_key<S: Into<String>>(mut self, api_key: S) -> Self {
+        self.api_key = SecretString::from(api_key.into());
+        self
     }
 
     /// Attempts to create a new `SakuraAI` instance from a URL.
@@ -266,6 +280,9 @@ impl Default for SakuraAI {
             reqwest_client: reqwest::Client::new(),
             #[cfg(feature = "headers")]
             request_headers: reqwest::header::HeaderMap::new(),
+            api_key: SecretString::from(
+                std::env::var("SAKURA_AI_ENGINE_API_KEY").unwrap_or_default(),
+            ),
         }
     }
 }
