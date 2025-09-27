@@ -5,6 +5,9 @@ description = "A Rust library for interacting with the Sakura AI Engine"
 edition = "2024"
 authors = ["Akira Ishino <akira@lumilab.jp>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/stn/sakura-ai-rs"
+repository = "https://github.com/stn/sakura-ai-rs"
 
 [dependencies]
 async-stream = "0.3.5"
@@ -31,3 +34,7 @@ sakura-ai-rs = { path = ".", features = [
 default = ["reqwest/default-tls"]
 stream = ["tokio-stream", "reqwest/stream", "tokio", "ollama-rs/stream"]
 headers = ["http", "ollama-rs/headers"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
