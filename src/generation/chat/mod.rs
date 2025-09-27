@@ -10,6 +10,7 @@ use ollama_rs::{
     },
     history::ChatHistory,
 };
+use secrecy::ExposeSecret;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -60,8 +61,7 @@ impl SakuraAI {
         #[cfg(feature = "headers")]
         let builder = builder.headers(self.request_headers.clone());
 
-        let token = std::env::var("SAKURA_AI_ENGINE_API_KEY").unwrap_or_default();
-        let builder = builder.bearer_auth(token);
+        let builder = builder.bearer_auth(self.api_key.expose_secret());
 
         let res = builder.json(&request).send().await?;
 
@@ -162,8 +162,7 @@ impl SakuraAI {
         let url = format!("{}v1/chat/completions", self.url_str());
         let builder = self.reqwest_client.post(url);
 
-        let token = std::env::var("SAKURA_AI_ENGINE_API_KEY").unwrap_or_default();
-        let builder = builder.bearer_auth(token);
+        let builder = builder.bearer_auth(self.api_key.expose_secret());
 
         #[cfg(feature = "headers")]
         let builder = builder.headers(self.request_headers.clone());
