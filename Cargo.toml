@@ -1,6 +1,6 @@
 [package]
 name = "sakura-ai-rs"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Rust library for interacting with the Sakura AI Engine"
 edition = "2024"
 authors = ["Akira Ishino <akira@lumilab.jp>"]
