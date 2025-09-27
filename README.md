@@ -37,12 +37,14 @@ use sakura_ai_rs::SakuraAI;
 let sakura = SakuraAI::default();
 ```
 
+アカウントトークンを環境変数で指定する代わりに、`.with_api_key(key)`で指定することもできる。
+
 ### Chat Completion API
 
 `send_chat_messages`を用いてSakura AI Engineの[Chat Completion](https://manual.sakura.ad.jp/api/cloud/ai-engine/inference.html#operation/createChatCompletion)を呼び出す。
 
 ```rust
-use ollama_rs::generation::chat::{ChatMessage, ChatMessageRequest};
+use ollama_rs::generation::chat::{ChatMessage, request::ChatMessageRequest};
 use ollama_rs::history::ChatHistory;
 use sakura_ai_rs::SakuraAI;
 
@@ -82,9 +84,11 @@ if let Ok(res) = res {
 `send_chat_messages_with_history`を用いると会話履歴も管理される。
 
 ```rust
-use ollama_rs::generation::chat::{ChatMessage, ChatMessageRequest};
+use ollama_rs::generation::chat::{ChatMessage, request::ChatMessageRequest};
 use ollama_rs::history::ChatHistory;
+use sakura_ai_rs::SakuraAI;
 
+let sakura = SakuraAI::default();
 let model = "llama2:latest".to_string();
 let prompt = "Why is the sky blue?".to_string();
 // `Vec<ChatMessage>` implements `ChatHistory`,
