@@ -10,7 +10,7 @@
 //!
 //! ollama-rsとsakura-ai-rsをCargo.tomlのdependenciesに追加
 //!
-//!```
+//!```bash
 //!cargo add sakura-ai-rs
 //!cargo add ollama-rs
 //!```
@@ -19,12 +19,12 @@
 //!
 //! [アカウントトークン](https://secure.sakura.ad.jp/ai/account-tokens)を作成し、環境変数`SAKURA_AI_ENGINE_API_KEY`に設定します。
 //!
-//!```
+//!```bash
 //!# macOS / Linux
 //!export SAKURA_AI_ENGINE_API_KEY='...'
 //!```
 //!
-//!```
+//!```powershell
 //!# Windows PowerShell
 //!$env:SAKURA_AI_ENGINE_API_KEY = '...'
 //!```
@@ -69,7 +69,7 @@
 //!
 //! `send_chat_messages_stream`の使用例は[examples/chat_api_chatbot.rs](https://github.com/stn/sakura-ai-rs/blob/main/examples/chat_api_chatbot.rs)を参考に。
 //!
-//!```
+//!```bash
 //!> cargo run --example chat_api_chatbot        
 //!    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
 //!     Running `target\debug\examples\chat_api_chatbot.exe`
